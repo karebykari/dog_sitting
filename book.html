@@ -19,7 +19,7 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="pricing.html">Services &amp; Pricing</a></li>
-      <li><a href="https://calendly.com/karebykari/30min">Availability</a></li>
+      <li><a href="availability.html">Availability</a></li>
       <li><a href="gallery.html">Gallery</a></li>
       <li><a href="testimonials.html">Testimonials</a></li>
     </ul>
@@ -37,7 +37,7 @@
   <div class="wrap page-intro">
     <span class="eyebrow">Book Now</span>
     <h1>Let's get your dates on the calendar.</h1>
-    <p style="max-width:52ch; margin:0 auto;">Fill this out and I'll follow up within a day to confirm details and set up a meet &amp; greet if we haven't met yet.</p>
+    <p style="max-width:52ch; margin:0 auto;">Choose one day or a range of days. Your dates are reserved immediately, and no one else can book them.</p>
   </div>
 
   <section class="section--tight">
@@ -90,20 +90,22 @@
             </div>
             <div class="field">
               <label for="endDate">End date</label>
-              <input type="date" id="endDate" name="endDate">
+              <input type="date" id="endDate" name="endDate" required>
             </div>
           </div>
+          <p class="date-help">For one day, choose the same start and end date. For a longer stay, select every day you need.</p>
+          <div class="form-error" data-booking-error role="alert"></div>
 
           <div class="field">
             <label for="notes">Anything I should know?</label>
             <textarea id="notes" name="notes" rows="4" placeholder="Feeding schedule, medication, temperament, favorite toys — anything helpful."></textarea>
           </div>
 
-          <button type="submit" class="btn-tag">Send Booking Request</button>
-          <p class="form-note">This opens your email app with the details filled in — I'll reply within a day to confirm.</p>
+          <button type="submit" class="btn-tag" data-booking-submit>Book These Dates</button>
+          <p class="form-note">Only one booking is allowed per calendar day. If another customer books first, you’ll be asked to choose different dates.</p>
 
           <div class="form-success" data-booking-success>
-            Thanks! Your email app should have opened with your request pre-filled — just hit send. I'll get back to you within a day.
+            Your dates are booked! We’ll contact you using the information above if we need any additional details.
           </div>
         </form>
       </div>
@@ -111,7 +113,7 @@
       <aside class="book-side">
         <div class="card">
           <h4>What happens next</h4>
-          <p style="margin:0; font-size:0.92rem;">I'll confirm availability and, if we haven't met, set up a free meet &amp; greet before the first stay.</p>
+          <p style="margin:0; font-size:0.92rem;">The system checks every selected day, books the full range together, and prevents anyone else from taking those dates.</p>
         </div>
         <div class="card">
           <h4>Service area</h4>
@@ -144,7 +146,7 @@
         <ul>
           <li><a href="about.html">About</a></li>
           <li><a href="pricing.html">Services &amp; Pricing</a></li>
-          <li><a href="https://calendly.com/karebykari/30min">Availability</a></li>
+          <li><a href="availability.html">Availability</a></li>
           <li><a href="testimonials.html">Testimonials</a></li>
           <li><a href="book.html">Book Now</a></li>
         </ul>

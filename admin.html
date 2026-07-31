@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Owner Calendar — Kare By Kari</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="12" cy="16" rx="6" ry="5"/><ellipse cx="5" cy="8" rx="2.3" ry="3"/><ellipse cx="10" cy="5" rx="2.3" ry="3"/><ellipse cx="15" cy="5" rx="2.3" ry="3"/><ellipse cx="19.5" cy="8.5" rx="2.1" ry="2.8"/></svg>
+      Kare By Kari
+    </a>
+    <a href="availability.html" class="btn-tag on-pine">Public Calendar</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap page-intro">
+    <span class="eyebrow">Private Owner Page</span>
+    <h1>Manage the calendar</h1>
+    <p style="max-width:56ch; margin:0 auto;">Block dates when you are unavailable, reopen blocked dates, and review customer bookings.</p>
+  </div>
+
+  <section class="section--tight">
+    <div class="wrap admin-shell">
+      <div class="form-card">
+        <div class="field">
+          <label for="adminKey">Owner password</label>
+          <input type="password" id="adminKey" autocomplete="current-password" data-admin-key>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="adminStartDate">Start date</label>
+            <input type="date" id="adminStartDate" data-admin-start>
+          </div>
+          <div class="field">
+            <label for="adminEndDate">End date</label>
+            <input type="date" id="adminEndDate" data-admin-end>
+          </div>
+        </div>
+
+        <div class="admin-actions">
+          <button type="button" class="btn-tag" data-admin-block>Block Dates</button>
+          <button type="button" class="btn-tag ghost" data-admin-unblock>Reopen Blocked Dates</button>
+        </div>
+        <p class="form-note">Reopen only removes dates you blocked yourself. Customer bookings must be cancelled from the booking list below.</p>
+        <div class="admin-message" data-admin-message role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="admin-list-card">
+        <div class="admin-list-head">
+          <div>
+            <span class="eyebrow">Upcoming</span>
+            <h2>Bookings &amp; blocked dates</h2>
+          </div>
+          <button type="button" class="btn-tag ghost" data-admin-refresh>Refresh</button>
+        </div>
+        <div data-admin-schedule>
+          <p>Enter the owner password, then select Refresh.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/main.js"></script>
+</body>
+</html>
