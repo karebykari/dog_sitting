@@ -75,15 +75,95 @@ function initCalendar(){
   const prevBtn = shell.querySelector('[data-cal-prev]');
   const nextBtn = shell.querySelector('[data-cal-next]');
   const message = document.querySelector('[data-calendar-message]');
+  const rangeTitle = shell.querySelector('[data-range-title]');
+  const rangeDates = shell.querySelector('[data-range-dates]');
+  const clearRangeButton = shell.querySelector('[data-range-clear]');
+  const bookRangeLink = shell.querySelector('[data-range-book]');
 
   const today = new Date();
   let viewYear = today.getFullYear();
   let viewMonth = today.getMonth();
   let unavailableDates = new Set();
   let requestNumber = 0;
+  let calendarLoading = false;
+  let selectionStart = '';
+  let selectionEnd = '';
 
   const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const dowNames = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+  function updateRangeUI(){
+    if(!selectionStart){
+      rangeTitle.textContent = 'Select your first day';
+      rangeDates.textContent = 'Then select the last day of the stay.';
+      bookRangeLink.hidden = true;
+      return;
+    }
+
+    if(!selectionEnd){
+      rangeTitle.textContent = 'Now select the last day';
+      rangeDates.textContent = `Starting ${displayDate(selectionStart)}`;
+      bookRangeLink.hidden = true;
+      return;
+    }
+
+    rangeTitle.textContent = 'Your selected stay';
+    rangeDates.textContent = selectionStart === selectionEnd
+      ? displayDate(selectionStart)
+      : `${displayDate(selectionStart)} – ${displayDate(selectionEnd)}`;
+    bookRangeLink.href = `book.html?start=${selectionStart}&end=${selectionEnd}`;
+    bookRangeLink.hidden = false;
+  }
+
+  function clearSelection(){
+    selectionStart = '';
+    selectionEnd = '';
+    updateRangeUI();
+    render();
+  }
+
+  async function selectDate(dateValue){
+    if(calendarLoading || unavailableDates.has(dateValue)) return;
+
+    if(!selectionStart || selectionEnd){
+      selectionStart = dateValue;
+      selectionEnd = '';
+      if(message) message.textContent = 'First day selected. Now choose the last day.';
+      updateRangeUI();
+      render();
+      return;
+    }
+
+    if(dateValue < selectionStart){
+      selectionStart = dateValue;
+      selectionEnd = '';
+      if(message) message.textContent = 'New first day selected. Now choose the last day.';
+      updateRangeUI();
+      render();
+      return;
+    }
+
+    if(message) message.textContent = 'Checking every day in this range…';
+    try{
+      const data = await fetch(`/api/availability?start=${selectionStart}&end=${dateValue}`, {
+        headers:{ Accept:'application/json' },
+      }).then(readJSON);
+      if(data.unavailable?.length){
+        const firstUnavailable = data.unavailable[0];
+        if(message){
+          message.textContent = `${displayDate(firstUnavailable)} is unavailable. Choose an earlier last day or a new first day.`;
+        }
+        return;
+      }
+
+      selectionEnd = dateValue;
+      if(message) message.textContent = 'All selected days are available. Continue to booking.';
+      updateRangeUI();
+      render();
+    } catch(error){
+      if(message) message.textContent = error.message;
+    }
+  }
 
   function render(){
     monthLabel.textContent = `${monthNames[viewMonth]} ${viewYear}`;
@@ -107,26 +187,39 @@ function initCalendar(){
 
     for(let d=1; d<=daysInMonth; d++){
       const dateValue = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-      const cell = document.createElement('a');
+      const cell = document.createElement('button');
+      cell.type = 'button';
       const cellDate = new Date(viewYear, viewMonth, d);
       const isPast = cellDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
       const isToday = cellDate.toDateString() === today.toDateString();
       const isBooked = unavailableDates.has(dateValue);
+      const isStart = dateValue === selectionStart;
+      const isEnd = dateValue === selectionEnd;
+      const isInRange = selectionStart && selectionEnd &&
+        dateValue > selectionStart && dateValue < selectionEnd;
 
-      cell.className = 'cal-day' + (isBooked ? ' booked' : (isPast ? '' : ' available')) + (isToday ? ' today' : '');
+      cell.className = 'cal-day' +
+        (isBooked ? ' booked' : (isPast ? '' : ' available')) +
+        (isToday ? ' today' : '') +
+        (isStart ? ' range-start' : '') +
+        (isEnd ? ' range-end' : '') +
+        (isInRange ? ' in-range' : '');
       cell.textContent = d;
       if(isBooked){
         cell.title = 'Unavailable';
+        cell.disabled = true;
         cell.setAttribute('aria-label', `${displayDate(dateValue)} is unavailable`);
       } else if(!isPast){
         cell.title = 'Available — select this date';
-        cell.href = `book.html?start=${dateValue}`;
         cell.setAttribute('aria-label', `${displayDate(dateValue)} is available`);
+        cell.addEventListener('click', () => selectDate(dateValue));
       } else {
+        cell.disabled = true;
         cell.setAttribute('aria-disabled', 'true');
       }
       grid.appendChild(cell);
     }
+    updateRangeUI();
   }
 
   async function loadMonth(){
@@ -134,6 +227,7 @@ function initCalendar(){
     const start = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-01`;
     const end = toLocalISO(new Date(viewYear, viewMonth + 1, 0));
     if(message) message.textContent = 'Checking live availability…';
+    calendarLoading = true;
     unavailableDates = new Set();
     render();
 
@@ -148,6 +242,7 @@ function initCalendar(){
       if(currentRequest !== requestNumber) return;
       if(message) message.textContent = error.message;
     }
+    calendarLoading = false;
     render();
   }
 
@@ -159,6 +254,7 @@ function initCalendar(){
     viewMonth++; if(viewMonth > 11){ viewMonth = 0; viewYear++; }
     await loadMonth();
   });
+  clearRangeButton.addEventListener('click', clearSelection);
 
   loadMonth();
 }
@@ -178,10 +274,15 @@ function initBookingForm(){
   startInput.min = today;
   endInput.min = today;
 
-  const queryStart = new URLSearchParams(window.location.search).get('start');
+  const query = new URLSearchParams(window.location.search);
+  const queryStart = query.get('start');
+  const queryEnd = query.get('end');
   if(queryStart && /^\d{4}-\d{2}-\d{2}$/.test(queryStart) && queryStart >= today){
     startInput.value = queryStart;
-    endInput.value = queryStart;
+    endInput.value = queryEnd && /^\d{4}-\d{2}-\d{2}$/.test(queryEnd) && queryEnd >= queryStart
+      ? queryEnd
+      : queryStart;
+    endInput.min = queryStart;
   }
 
   startInput.addEventListener('change', () => {

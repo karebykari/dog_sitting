@@ -516,11 +516,20 @@ button.btn-tag{ font-family: var(--font-mono); }
 .cal-day{
   aspect-ratio: 1/1; display:flex; align-items:center; justify-content:center;
   border-radius: 8px; font-family: var(--font-mono); font-size:0.85rem; color: var(--ink);
-  background: transparent;
+  background: transparent; border:0; padding:0; width:100%;
 }
+.cal-day.available{ cursor:pointer; }
+.cal-day:disabled{ cursor:not-allowed; }
 .cal-day.pad{ visibility:hidden; }
 .cal-day.available{ background: #F2E1B0; color: var(--pine); font-weight:700; }
 .cal-day.available:hover{ background:var(--marigold); transform:translateY(-1px); }
+.cal-day.range-start,
+.cal-day.range-end{
+  background:var(--pine);
+  color:#fff;
+  box-shadow:0 0 0 2px var(--marigold);
+}
+.cal-day.in-range{ background:#E7C985; color:var(--pine); }
 .cal-day.booked{ background: #EAD9C4; color: var(--clay); text-decoration: line-through; }
 .cal-day.today{ box-shadow: 0 0 0 2px var(--marigold); font-weight:700; }
 .cal-legend{ display:flex; gap:18px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
@@ -528,6 +537,26 @@ button.btn-tag{ font-family: var(--font-mono); }
 .legend-dot{ width:12px; height:12px; border-radius:4px; }
 .legend-dot.available{ background:#F2E1B0; }
 .legend-dot.booked{ background:#EAD9C4; }
+.range-selection{
+  display:grid;
+  gap:4px;
+  margin-top:22px;
+  padding:18px;
+  border-radius:14px;
+  background:var(--sage);
+  text-align:left;
+}
+.range-selection strong{ color:var(--pine); font-family:var(--font-display); }
+.range-selection > span{ color:var(--ink-soft); font-size:.88rem; }
+.range-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+.range-actions [hidden]{ display:none; }
 .calendar-message{
   min-height:1.5em;
   margin:24px auto 0;

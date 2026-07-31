@@ -58,9 +58,16 @@
           <span><span class="legend-dot booked"></span>Booked</span>
           <span><span class="legend-dot" style="box-shadow:0 0 0 2px var(--marigold); background:transparent;"></span>Today</span>
         </div>
+        <div class="range-selection" data-range-selection>
+          <strong data-range-title>Select your first day</strong>
+          <span data-range-dates>Then select the last day of the stay.</span>
+          <div class="range-actions">
+            <button type="button" class="text-button" data-range-clear>Clear dates</button>
+            <a href="book.html" class="btn-tag" data-range-book hidden>Book Selected Dates</a>
+          </div>
+        </div>
       </div>
       <p class="calendar-message" data-calendar-message aria-live="polite"></p>
-      <p style="text-align:center; margin-top:20px;"><a href="book.html" class="btn-tag">Choose Your Dates</a></p>
     </div>
   </section>
 
