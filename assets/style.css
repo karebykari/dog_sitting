@@ -206,6 +206,27 @@ button.btn-tag{ font-family: var(--font-mono); }
   font-size:clamp(2.8rem, 6vw, 5rem);
   line-height:1.02;
 }
+.simple-hero .kare-values{
+  display:grid;
+  grid-template-columns:auto auto;
+  align-items:center;
+  gap:.04em;
+  width:max-content;
+  max-width:100%;
+  font-size:clamp(2.35rem, 5vw, 4.45rem);
+  line-height:1;
+}
+.kare-values-letter{
+  font-size:3.55em;
+  line-height:.72;
+}
+.kare-values-words{
+  display:grid;
+  gap:.18em;
+  font-size:.82em;
+  text-align:left;
+}
+.kare-values-words > span{ display:block; }
 .simple-hero .lede{
   max-width:38ch;
   font-size:1.2rem;
@@ -351,6 +372,10 @@ button.btn-tag{ font-family: var(--font-mono); }
   }
   .simple-hero-copy{ margin:auto; }
   .simple-hero h1{ margin-left:auto; margin-right:auto; }
+  .simple-hero .kare-values{
+    grid-template-columns:auto auto;
+    font-size:clamp(1.85rem, 9vw, 3.2rem);
+  }
   .simple-hero .lede{ margin-left:auto; margin-right:auto; }
   .simple-hero .hero-actions{ justify-content:center; }
   .happy-dog-art{ width:min(78vw, 330px); }
