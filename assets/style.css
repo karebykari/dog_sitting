@@ -463,6 +463,13 @@ button.btn-tag{ font-family: var(--font-mono); }
   transition:transform .25s ease;
 }
 .gallery-photo:hover img{ transform:scale(1.025); }
+.gallery-empty{
+  padding-top:30px;
+  padding-bottom:90px;
+  text-align:center;
+}
+.gallery-empty > span{ display:block; font-size:3rem; margin-bottom:12px; }
+.gallery-empty p{ margin-bottom:0; }
 @media (max-width:860px){
   .gallery-grid{ columns:2 240px; }
 }
