@@ -4,6 +4,7 @@ const {
   expandDateRange,
   isConfigured,
 } = require('../lib/booking-store');
+const { sendBookingNotification } = require('../lib/booking-notification');
 
 const SERVICES = new Set([
   'Overnight Boarding',
@@ -63,6 +64,12 @@ module.exports = async function handler(request, response) {
         error: `${result.conflictDate} is no longer available. Please choose different dates.`,
         conflictDate: result.conflictDate,
       });
+    }
+
+    try {
+      await sendBookingNotification(booking);
+    } catch (notificationError) {
+      console.error('Booking saved, but owner email notification failed:', notificationError);
     }
 
     return response.status(201).json({
